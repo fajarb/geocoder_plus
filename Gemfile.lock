@@ -1,0 +1,26 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    geokit (1.5.0)
+    git (1.2.5)
+    jeweler (1.5.2)
+      bundler (~> 1.0.0)
+      git (>= 1.2.5)
+      rake
+    mocha (0.9.12)
+    rake (0.8.7)
+    rcov (0.9.9)
+    shoulda (2.11.3)
+    yajl-ruby (0.8.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.0.0)
+  geokit (>= 1.5.0)
+  jeweler (~> 1.5.2)
+  mocha
+  rcov
+  shoulda
+  yajl-ruby (>= 0.8.2)
