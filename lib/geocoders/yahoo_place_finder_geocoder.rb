@@ -1,7 +1,16 @@
 module Geokit
   module Geocoders
     class YahooPlaceFinderGeocoder < Geocoder
+      
       private
+      
+      def self.success_response?(res)
+        if res.is_a?(Typhoeus::Response)
+          return res.success?
+        else
+          return res.is_a?(Net::HTTPSuccess)
+        end
+      end
       
       def self.get_url(address, options={})        
         if (options[:reverse])
@@ -17,16 +26,24 @@ module Geokit
       def self.do_reverse_geocode(latlng) 
         res = self.call_geocoder_service(self.get_url(latlng, :reverse => true))
         logger.debug "Yahoo PlaceFinder reverse-geocoding. LL: #{latlng}. Result: #{res}"
-        return self.parse_body(Yajl::Parser.parse(res.body))
+        
+        if success_response?(res)
+          return self.parse_body(Yajl::Parser.parse(res.body))
+        else
+          return GeoLoc.new
+        end
       end
       
       def self.do_geocode(address, options={})
         address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
         res = self.call_geocoder_service(self.get_url(address, options))
-        return GeoLoc.new if !res.is_a?(Net::HTTPSuccess)
         logger.debug "Yahoo PlaceFinder geocoding. Address: #{address}. Result: #{res}"
         
-        return self.parse_body(Yajl::Parser.parse(res.body))
+        if success_response?(res)
+          return self.parse_body(Yajl::Parser.parse(res.body))
+        else
+          return GeoLoc.new
+        end
       rescue 
         logger.info "Caught an error during Yahoo PlaceFinder geocoding call: "+$!
         return GeoLoc.new
@@ -63,7 +80,7 @@ module Geokit
         geoloc.lat            = result['latitude']
         geoloc.lng            = result['longitude']
         geoloc.country_code   = result['countrycode']
-        geoloc.provider       = 'Yahoo! PlaceFinder'
+        geoloc.provider       = 'yahoo_place_finder'
 
         # extended -- false if not not available
         geoloc.street_address = result['line1']

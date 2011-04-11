@@ -1,6 +1,13 @@
 = geocoder_plus
 
-Description goes here.
+This gem has two additional geocoders for geokit gem, Yahoo! PlaceFinder and Google V3.
+Google V3 code is taken from https://github.com/tello/google-v3-geocoder.
+
+Example:
+
+Geokit::Geocoders::YahooPlaceFinderGeocoder.geocode('701 First Avenue Sunnyvale, California 94089')
+Geokit::Geocoders::GoogleV3Geocoder.geocode('701 First Avenue Sunnyvale, California 94089')
+
 
 == Contributing to geocoder_plus
  
@@ -16,4 +23,3 @@ Description goes here.
 
 Copyright (c) 2011 Fajar A B. See LICENSE.txt for
 further details.
-

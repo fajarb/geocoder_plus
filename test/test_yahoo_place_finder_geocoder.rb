@@ -2,6 +2,7 @@ require 'helper'
 
 class TestYahooPlaceFinderGeocoder < Test::Unit::TestCase
     
+  # TODO do test with mock result
   # default is true
   MOCK = false
   

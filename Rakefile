@@ -21,10 +21,10 @@ Jeweler::Tasks.new do |gem|
   gem.authors = ["Fajar A B"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  gem.add_runtime_dependency 'geokit', '>= 1.5.0'
-  gem.add_runtime_dependency 'yajl-ruby', '>= 0.8.2'
-  gem.add_development_dependency 'shoulda', '> 0'
-  gem.add_development_dependency 'mocha', '> 0'
+  # gem.add_runtime_dependency 'geokit', '>= 1.5.0'
+  # gem.add_runtime_dependency 'yajl-ruby', '>= 0.8.2'
+  # gem.add_development_dependency 'shoulda', '> 0'
+  # gem.add_development_dependency 'mocha', '> 0'
   gem.files = Dir.glob('lib/**/*.rb')
 end
 Jeweler::RubygemsDotOrgTasks.new

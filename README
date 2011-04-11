@@ -23,4 +23,3 @@ Geokit::Geocoders::GoogleV3Geocoder.geocode('701 First Avenue Sunnyvale, Califor
 
 Copyright (c) 2011 Fajar A B. See LICENSE.txt for
 further details.
-
