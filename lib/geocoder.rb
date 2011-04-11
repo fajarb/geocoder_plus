@@ -3,6 +3,8 @@ module Geokit
     
     @@cache = nil
     @@hydra = nil
+    @@typhoeus_timeout = 30000
+    @@typhoeus_cache_timeout = 604800
     __define_accessors
 
     # The Geocoder base class which defines the interface to be used by all
@@ -16,9 +18,9 @@ module Geokit
       end
       
       # Set hydra and memcache if defined in configuration file
-      def self.initialize_cache        
-        if (Geokit::Geocoders::cache && Geokit::Geocoders::hydra)
-          @cache = Geokit::Geocoders::cache
+      def self.initialize_cache
+        if (Geokit::Geocoders::cache && Geokit::Geocoders::hydra && self.respond_to?(:success_response?))
+          @cache = Geokit::Geocoders::cache          
           Geokit::Geocoders::hydra.cache_setter do |request|
             @cache.set(request.cache_key, request.response, request.cache_timeout)
           end
@@ -28,18 +30,21 @@ module Geokit
           end
           return true
         end
-      end
+      end      
       
       # Wraps the geocoder call around a proxy if necessary.
       # Use typhoeus and memcache if defined
-      def self.do_get(url)
+      def self.do_get(url)  
         uri = URI.parse(url)
         if (cache_query)
-          req = Typhoeus::Request.new(url, :cache_timeout => 604800) # cache response for 1 week
+          req = Typhoeus::Request.new(url,
+                  :timeout       => Geokit::Geocoders::typhoeus_timeout,  # milliseconds
+                  :cache_timeout => Geokit::Geocoders::typhoeus_cache_timeout)
+                  # :headers => {"Authorization" => "Basic #{Base64.b64encode("#{uri.user}:#{uri.password}")}"}) 
           Geokit::Geocoders::hydra.queue(req)
           Geokit::Geocoders::hydra.run
           return req.response
-        else     
+        else      
           req = Net::HTTP::Get.new(url)
           req.basic_auth(uri.user, uri.password) if uri.userinfo
           res = Net::HTTP::Proxy(GeoKit::Geocoders::proxy_addr,
