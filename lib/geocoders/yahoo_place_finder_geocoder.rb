@@ -5,7 +5,7 @@ module Geokit
       private
       
       def self.success_response?(res)
-        if res.is_a?(Typhoeus::Response)
+        if (defined?(Typhoeus) && res.is_a?(Typhoeus::Response))
           return res.success?
         else
           return res.is_a?(Net::HTTPSuccess)

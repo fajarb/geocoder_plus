@@ -34,7 +34,7 @@ module Geokit
       
       # Wraps the geocoder call around a proxy if necessary.
       # Use typhoeus and memcache if defined
-      def self.do_get(url)  
+      def self.do_get(url)
         uri = URI.parse(url)
         if (cache_query)
           req = Typhoeus::Request.new(url,

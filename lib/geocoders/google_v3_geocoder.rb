@@ -7,7 +7,7 @@ module Geokit
       private
       
       def self.success_response?(res)
-        if res.is_a?(Typhoeus::Response)
+        if (defined?(Typhoeus) && res.is_a?(Typhoeus::Response))
           return res.success?
         else
           return res.is_a?(Net::HTTPSuccess)
@@ -31,8 +31,8 @@ module Geokit
         else
           return GeoLoc.new
         end
-      rescue 
-        logger.info "Caught an error during Google V3 geocoding call: "+$!
+      rescue Exception => e
+        logger.info "Caught an error during Google V3 geocoding call: #{e.inspect}"
         return GeoLoc.new
       end
 
