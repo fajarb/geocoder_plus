@@ -18,7 +18,7 @@ module Geokit
           yql = "select * from geo.placefinder where text='#{latlng}' and gflags='R'"
         else
           address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
-          yql = "select * from geo.placefinder where text='#{address}'"
+          yql = "select * from geo.placefinder where text='#{address}' and flags='X'"
         end
         return "http://query.yahooapis.com/v1/public/yql?q=#{Geokit::Inflector::url_escape(yql)}&format=json"
       end
@@ -110,15 +110,14 @@ module Geokit
           else 'unknown'
         end
         
+        # Set the bounds from the viewport
+        bounds = result['boundingbox']
+        geoloc.suggested_bounds = Bounds.normalize(
+          [bounds['north'], bounds['east']],
+          [bounds['south'], bounds['west']]
+        )        
+                
         geoloc.accuracy = %w{unknown country state state city zip zip+4 street address building}.index(geoloc.precision)
-        # geoloc.full_address = "#{geoloc.street_address}, #{result['line2']}, #{geoloc.country}" if (geoloc.street_address && result['line2'])
-
-        # google returns a set of suggested boundaries for the geocoded result
-        # if suggested_bounds = doc.elements['//LatLonBox']  
-        #   res.suggested_bounds = Bounds.normalize(
-        #                           [suggested_bounds.attributes['south'], suggested_bounds.attributes['west']], 
-        #                           [suggested_bounds.attributes['north'], suggested_bounds.attributes['east']])
-        # end
 
         geoloc.success = true
 
