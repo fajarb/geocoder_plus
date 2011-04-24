@@ -12,15 +12,16 @@ Support for query caching is added by using [api_cache](https:/github.com/mlough
     gem install api_cache
     gem install moneta
 
-		# Configuration
-		Add following configuration to your geokit config file:
-	      require 'api_cache'
-			  require 'moneta'
-			  require 'moneta/memcache'
-			  Geokit::Geocoders::api_cache         = 604800
-			  Geokit::Geocoders::api_cache_valid   = :forever
-			  Geokit::Geocoders::api_cache_timeout = 5
-			  APICache.store = Moneta::Memcache.new(:server => localhost:11211, :namespace => 'geokit')
+    # Configuration
+    Add following configuration to your geokit config file:
+    
+    require 'api_cache'
+    require 'moneta'
+    require 'moneta/memcache'
+    Geokit::Geocoders::api_cache         = 604800
+    Geokit::Geocoders::api_cache_valid   = :forever
+    Geokit::Geocoders::api_cache_timeout = 5
+    APICache.store = Moneta::Memcache.new(:server => localhost:11211, :namespace => 'geokit')
 		
 ## Contributing
 
