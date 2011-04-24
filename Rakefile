@@ -16,7 +16,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/fajarb/geocoder_plus"
   gem.license = "MIT"
   gem.summary = %Q{Additional geocoders for geokit gem}
-  gem.description = %Q{This gem consists two additional geocoders for geokit, Yahoo! PlaceFinder and Google V3}
+  gem.description = %Q{This gem consists two additional geocoders for geokit, Yahoo! PlaceFinder and Google V3.  And add support for caching using api_caching gem.}
   gem.email = "fajar.ab@gmail.com"
   gem.authors = ["Fajar A B"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,

@@ -15,14 +15,10 @@ require 'geocoders/google_v3_geocoder'
 
 module GeocoderPlus
   
-  @use_typhoeus = true
-  
-  # by default, try requiring Typhoeus -- if that works, use it
-  # if you have Typheous and don't want to use it (or want another service),
-  # you can run Koala.http_service = NetHTTPService (or MyHTTPService)
+  # by default, try requiring api_cache -- if that works, use it
   begin
-    require 'typhoeus'
+    require 'api_cache'
   rescue LoadError
-    puts "Typhoeus is not installed, using Net:HTTP. Install typhoeus to enable query caching."
+    puts "APICache is not installed. Install it to enable query caching, gem install 'api_cache'"
   end
 end

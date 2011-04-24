@@ -7,11 +7,7 @@ module Geokit
       private
       
       def self.success_response?(res)
-        if (defined?(Typhoeus) && res.is_a?(Typhoeus::Response))
-          return res.success?
-        else
-          return res.is_a?(Net::HTTPSuccess)
-        end
+        res.is_a?(Net::HTTPSuccess) || res.is_a?(String)
       end
       
       def self.get_url(address, options={})
@@ -21,24 +17,33 @@ module Geokit
       end
 
       def self.do_geocode(address, options = {})
-        geo_url = self.get_url(address, options)
+        # debugger
+        geo_url = self.get_url(normalize_address(address), options)
         logger.debug "Making Geocode request to:  #{geo_url}"
-        res = self.call_geocoder_service(geo_url)        
-        logger.debug "Google V3 geocoding. Address: #{address}. Result: #{res}"
-        
-        if success_response?(res)
-          return self.parse_body(Yajl::Parser.parse(res.body))
-        else
-          return GeoLoc.new
-        end
+        res = self.call_geocoder_service(geo_url)
+        return GeoLoc.new if !res.is_a?(Net::HTTPSuccess)
+        logger.debug "Google V3 geocoding. Address: #{address}. Result: #{res}"       
+        # if success_response?(res)
+        #   return self.parse_body(res)
+        # else
+        #   return GeoLoc.new
+        # end
+        return self.parse_body(res)
       rescue Exception => e
         logger.info "Caught an error during Google V3 geocoding call: #{e.inspect}"
         return GeoLoc.new
       end
 
-      def self.parse_body(body)    
+      def self.parse_body(res)
+        # debugger
+        # if res.is_a?(String)
+        #   body = Yajl::Parser.parse(res)
+        # else
+          body = Yajl::Parser.parse(res.body)
+        # end
+
         if body['status'] != "OK"
-          if body['status' ] == 'OVER_QUERY_LIMIT'
+          if body['status'] == 'OVER_QUERY_LIMIT'
             raise Geokit::TooManyQueriesError "Google returned OVER_QUERY_LIMIT: #{body}"
           elsif body['status'] == 'ZERO_RESULTS'
             logger.info "Found no results from google v3"

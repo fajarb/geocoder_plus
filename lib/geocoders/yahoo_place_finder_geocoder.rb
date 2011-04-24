@@ -5,11 +5,7 @@ module Geokit
       private
       
       def self.success_response?(res)
-        if (defined?(Typhoeus) && res.is_a?(Typhoeus::Response))
-          return res.success?
-        else
-          return res.is_a?(Net::HTTPSuccess)
-        end
+        res.is_a?(Net::HTTPSuccess) || res.is_a?(String)
       end
       
       def self.get_url(address, options={})        
@@ -28,7 +24,7 @@ module Geokit
         logger.debug "Yahoo PlaceFinder reverse-geocoding. LL: #{latlng}. Result: #{res}"
         
         if success_response?(res)
-          return self.parse_body(Yajl::Parser.parse(res.body))
+          return self.parse_body(Yajl::Parser.parse(res))
         else
           return GeoLoc.new
         end
@@ -36,20 +32,28 @@ module Geokit
       
       def self.do_geocode(address, options={})
         address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
-        res = self.call_geocoder_service(self.get_url(address, options))
+        res = self.call_geocoder_service(self.get_url(normalize_address(address), options))
+        return GeoLoc.new if !res.is_a?(Net::HTTPSuccess)
         logger.debug "Yahoo PlaceFinder geocoding. Address: #{address}. Result: #{res}"
         
-        if success_response?(res)
-          return self.parse_body(Yajl::Parser.parse(res.body))
-        else
-          return GeoLoc.new
-        end
+        # if success_response?(res)
+        #   return self.parse_body(res)
+        # else
+        #   return GeoLoc.new
+        # end
+        return self.parse_body(res)
       rescue 
         logger.info "Caught an error during Yahoo PlaceFinder geocoding call: "+$!
         return GeoLoc.new
       end
 
-      def self.parse_body(body)
+      def self.parse_body(res)
+        # if res.is_a?(String)
+        #   body = Yajl::Parser.parse(res)
+        # else
+          body = Yajl::Parser.parse(res.body)
+        # end
+
         count = body['query']['count']
         if (count == 1)
           return extract_place(body['query']['results']['Result'])

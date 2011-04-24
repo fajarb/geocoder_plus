@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    api_cache (0.2.3)
     geokit (1.5.0)
     git (1.2.5)
     jeweler (1.5.2)
@@ -8,6 +9,7 @@ GEM
       git (>= 1.2.5)
       rake
     mocha (0.9.12)
+    moneta (0.6.0)
     rake (0.8.7)
     rcov (0.9.9)
     shoulda (2.11.3)
@@ -17,10 +19,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  api_cache (~> 0.2.0)
   bundler (~> 1.0.0)
   geokit (>= 1.5.0)
   jeweler (~> 1.5.2)
   mocha
+  moneta (~> 0.6.0)
   rcov
   shoulda
   yajl-ruby (>= 0.8.2)
